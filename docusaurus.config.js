@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Blockchain Turtorial',
   tagline: 'Start your blockchain journey right here',
-  url: 'https://etherdata-blockchain.github.io/etherdata-sdk/',
-  baseUrl: '/blockrial/',
+  url: 'https://tutorial.etdchain.net',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
