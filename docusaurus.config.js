@@ -45,7 +45,7 @@ const config = {
             label: 'Tutorial',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/etherdata-blockchain/blockrial',
             label: 'GitHub',
             position: 'right',
           },
