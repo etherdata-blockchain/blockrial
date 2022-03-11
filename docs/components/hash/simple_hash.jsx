@@ -30,23 +30,19 @@ const hashFunctions = [
     title: "sha384",
     function: sha384,
   },
-  {
-    title: "hmacSHA512",
-    function: hmacSHA512,
-  },
 ];
-
+ 
 export default function SimpleHash() {
   const [hashFunction, setHashFunction] = React.useState(hashFunctions[0]);
   const [input, setInput] = React.useState("");
   const [hash, setHash] = React.useState("");
 
-  const updateHash = () => {
+   React.useEffect(() => {
     // Get hash result
     const hash = hashFunction.function(input).toString();
     // Update hash result
     setHash(hash);
-  };
+  }, [input, hashFunction])
 
   return (
     <Card>
@@ -68,8 +64,6 @@ export default function SimpleHash() {
               );
               // Set hash function
               setHashFunction(hashFunction);
-              // Update hash result
-              updateHash();
             }}
           >
             {hashFunctions.map((hashFunction) => (
@@ -90,7 +84,6 @@ export default function SimpleHash() {
             fullWidth
             onChange={(e) => {
               setInput(e.target.value);
-              updateHash();
             }}
           />
         </FormControl>
