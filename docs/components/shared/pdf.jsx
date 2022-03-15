@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
+// import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
 import { Stack } from "@mui/material";
 
 export default function PDFComponent({ url }) {
