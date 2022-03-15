@@ -4,9 +4,7 @@ import Pagination from "@mui/material/Pagination";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
 import { Stack } from "@mui/material";
 
-const url = "https://d6i2izex24s5q.cloudfront.net/etd-whitepaper-chinese.pdf";
-
-export default function button() {
+export default function PDFComponent({ url }) {
   const [numPages, setNumPages] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(1);
 
