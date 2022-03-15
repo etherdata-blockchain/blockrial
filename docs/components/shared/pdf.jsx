@@ -18,7 +18,7 @@ export default function PDFComponent({ url }) {
       alignContent={"center"}
       justifyContent="center"
     >
-      <Pagination
+      {/* <Pagination
         count={numPages}
         style={{ width: "100%" }}
         onChange={(e, page) => {
@@ -27,7 +27,7 @@ export default function PDFComponent({ url }) {
       />
       <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
         <Page pageNumber={pageNumber} />
-      </Document>
+      </Document> */}
       <Button
         variant="outlined"
         onClick={() => {
