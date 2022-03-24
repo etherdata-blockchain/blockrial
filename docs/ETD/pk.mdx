@@ -1,0 +1,185 @@
+---
+sidebar_position: 5
+title: 公钥与私钥
+---
+## 任务一、明文替换加密
+```python
+
+# 定义替换密码表
+tabA = "abcdefghij"
+tabB = "1234567890"
+# 加密表
+trant_en = str.maketrans(tabA, tabB)
+# 解密表
+trant_de = str.maketrans(tabB, tabA)
+
+# 使用translate，来进行密码替换。
+str = "hello word"
+
+# 加密
+encryption = str.translate(trant_en)  # 结果是85llo wor4
+print(encryption)
+
+# 解密
+decrypt = encryption.translate(trant_de)
+print(decrypt)
+```
+## 任务二、换位加密
+```python
+#倒序排列字符串
+def msg_reverse(msg):
+    msg_list = list(msg)
+    msg_list.reverse()
+    msg_en = ''.join(msg_list)
+    return msg_en
+
+message='hello jack'
+print('信息是：',message)
+#加密（倒序）
+en_reverse = msg_reverse(message)
+print('加密后：',en_reverse)
+#解密（还是倒序）
+de_reverse = msg_reverse(en_reverse)
+print('解密后：',de_reverse)
+```
+
+## 任务三、公钥私钥加密
+```python
+import rsa
+
+# 生成密钥
+(pubkey, privkey) = rsa.newkeys(1024)
+
+# 保存密钥
+with open('public.pem', 'w+') as f:
+    f.write(pubkey.save_pkcs1().decode())
+
+with open('private.pem', 'w+') as f:
+    f.write(privkey.save_pkcs1().decode())
+
+# 导入密钥
+with open('public.pem', 'r') as f:
+    pubkey = rsa.PublicKey.load_pkcs1(f.read().encode())
+
+with open('private.pem', 'r') as f:
+    privkey = rsa.PrivateKey.load_pkcs1(f.read().encode())
+
+# 明文
+message = '明文：hello'
+print(message)
+
+# 公钥加密
+crypto = rsa.encrypt(message.encode(), pubkey)
+print('公钥加密pub encode：',crypto)
+
+# 私钥解密
+message = rsa.decrypt(crypto, privkey).decode()
+print('私钥解密pri decode：',message)
+
+# 私钥签名
+signature = rsa.sign(message.encode(), privkey, 'SHA-1')
+print('私钥签名sign：',signature)
+
+# 公钥验证
+verify=rsa.verify(message.encode(), signature, pubkey)
+print('公钥验证verify：',verify)
+
+```
+
+## 任务四、公钥私钥加解密信息
+### 步骤一、同学A：创建公钥与私钥
+```python
+import rsa
+
+# 生成密钥
+(pubkey, privkey) = rsa.newkeys(1024)
+
+# 保存密钥
+with open('public.pem', 'w+') as f:
+    f.write(pubkey.save_pkcs1().decode())
+
+with open('private.pem', 'w+') as f:
+    f.write(privkey.save_pkcs1().decode())
+#A传送公钥给同学B
+```
+
+### 步骤二、同学B：公钥加密
+```python
+import rsa
+
+# 导入密钥
+with open('public.pem', 'r') as f:
+    pubkey = rsa.PublicKey.load_pkcs1(f.read().encode())
+
+# 明文
+message = '明文：hello'
+print(message)
+
+# 公钥加密
+crypto = rsa.encrypt(message.encode(), pubkey)
+print('公钥加密pub encode：',crypto)
+
+```
+
+### 步骤三、同学A：私钥解密
+```python
+import rsa
+
+# 导入密钥
+with open('private.pem', 'r') as f:
+    privkey = rsa.PrivateKey.load_pkcs1(f.read().encode())
+
+#导入加密信息
+crypto =b'\\V\xb6R\x90R\xd5\xe4m#\xec\xbd\xf4\xc5\x95\xfc\x00\xce>\xb8$\x93\xa8\x9eY\x8aW \xc1\x8b,T\xf4\x15?\xd9 }\x01\x11\nP{\x91\xd9\xaf\xb6\xf5\xe4l3\x9a^\xe9tv\xc2\xccq@Q6\xe4\xc1\x99\xf4Y\x12e.\xba\x81\xc7\xa6\xff\xc3~-\x01\xeeZ\xe1\xb1\xfa\xa0|*\xc3}%\xb4]\x9d\n\xab\xb3\xbd\xd4hza\\\x86)\x95\x9c\xe7\x10\x1e\x97\xa5\x82\x04\xe8\x9a\x81_@\x1a\\Q\x9e@\xf1\x151\r\xd0'
+
+# 私钥解密
+message = rsa.decrypt(crypto, privkey).decode()
+print('私钥解密pri decode：',message)
+
+```
+
+## 任务五、公钥私钥验证身份
+### 步骤一、同学A：创建公钥私钥
+```python
+import rsa
+
+# 生成密钥
+(pubkey, privkey) = rsa.newkeys(1024)
+
+# 保存密钥
+with open('public.pem', 'w+') as f:
+    f.write(pubkey.save_pkcs1().decode())
+
+with open('private.pem', 'w+') as f:
+    f.write(privkey.save_pkcs1().decode())
+```
+### 步骤二、同学A：私钥签名
+```python
+import rsa
+
+with open('private.pem', 'r') as f:
+    privkey = rsa.PrivateKey.load_pkcs1(f.read().encode())
+    
+message = 'A转给B十个比特币'
+
+# 私钥签名
+signature = rsa.sign(message.encode(), privkey, 'SHA-1')
+print('私钥签名sign：',signature)
+#将公钥给B
+
+```
+### 步骤三、同学B：公钥验证A身份
+```python
+import rsa
+# 导入密钥
+with open('public.pem', 'r') as f:
+    pubkey = rsa.PublicKey.load_pkcs1(f.read().encode())
+    
+signature=b'\x82\xa1mD\xd7\x05\xa7\xe3\xcd\x87\ng\x19\x8c\xfe\x8e\x18X|\x04\xc7dD5\xd6\x1d\x92\xb4\xd9g\xf1\xad\x9f\xa6\xb2\xaf\x8e\x82\xaf\n\xa2\xee\xa5\xbe>\xbb\x92\x05\r;m}:\x9d\x08HD\x15\xed\xf5l\xb5/\xb4\x1d5\x86\x1cu=m\x0bcs\xfe\xda\xaa\xbf\x13\xea\xc7~\xe5\xbd\xfcn\xa6i\xa1\x92\x81\x90\xd2"\xbd\xa3n\xc3\n\x9e\xe8]P\xeb\x1f\x00\x0e\x84\xf0jdC^&\x94R\xca_\xb3\xbd\rK\x8a\x98\xe8\x91\xf1o'
+message = 'A转给B十个比特币'
+
+# 公钥验证
+verify=rsa.verify(message.encode(), signature, pubkey)
+print('公钥验证verify：',verify)
+
+```

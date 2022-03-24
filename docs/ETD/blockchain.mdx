@@ -1,0 +1,78 @@
+---
+sidebar_position: 4
+title: 创建区块链
+---
+
+```python
+# Python 提供的module（模組）與package（套件）是建立架構的基本元件
+# Python的hashlib提供了常见的摘要算法，如MD5，SHA1等等。 摘要算法又称哈希算法、散列算法
+import hashlib as hasher
+# 該日期時間模塊類用來處理日期和時間
+import datetime as date
+```
+
+```python
+# 定義一個類名為Block
+class Block:
+    # 初始化：用def命令定義初始化函數init，構造自身身份，索引，時間戳，數據，前哈希值
+    def __init__(self, index, timestamp, data, previous_hash):
+        self.index = index
+        self.timestamp = timestamp
+        self.data = data
+        self.previous_hash = previous_hash
+        self.hash = self.hash_block()
+    # 製造哈希值：用def命令定義
+    def hash_block(self):
+        # 此處用SHA256加密方法
+        sha = hasher.sha256()
+        sha.update(
+            bytes(
+                str(self.index) + str(self.timestamp) + str(self.data) + str(
+                    self.previous_hash), 'utf-8'))
+        return sha.hexdigest()
+
+```
+
+```python
+# 創造創世區塊
+def create_genesis_block():
+    # 手動構造一個索引為0和任意先前哈希的塊
+    return Block(0, date.datetime.now(), "Genesis Block", "0")
+```
+
+```python
+# 構造區塊直接的連式結構，構造“區塊鏈”
+def next_block(last_block):
+    # 索引加一
+    this_index = last_block.index + 1
+    # 增加時間戳
+    this_timestamp = date.datetime.now()
+    # 增加區塊裡面的內容
+    this_data = "Hey! I'm block " + str(this_index)
+    # 哈希值指向前一個區塊的哈希值
+    this_hash = last_block.hash
+    # 返回區塊
+    return Block(this_index, this_timestamp, this_data, this_hash)
+```
+
+```python
+# 創建區塊鏈並添加genesis塊
+blockchain = [create_genesis_block()]
+previous_block = blockchain[0]
+
+# 在生成區塊之後，我們應該在鏈中增加的區塊數
+num_of_blocks_to_add = 20
+
+#通過循環鏈式添加區塊，使其成為有20個區塊的區塊鏈
+for i in range(0, num_of_blocks_to_add):
+    #將前後區塊鏈鏈接到一起
+    block_to_add = next_block(previous_block)
+    #用append方法增加區塊
+    blockchain.append(block_to_add)
+    #構造連式結構
+    previous_block = block_to_add
+    #  打印已經構造好的鏈
+    print("Block #{} has been added to the "
+            "blockchain!".format(block_to_add.index))
+    print("Hash: {}\n".format(block_to_add.hash))
+```
