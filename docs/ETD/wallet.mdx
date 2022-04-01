@@ -1,9 +1,25 @@
 ---
 sidebar_position: 6
-title: 创建钱包、挖矿、转账、查询余额
+title: 创建钱包、转账、查询余额
 ---
 
-本教程将会介绍如何使用Etherdata-SDK 签署交易。请建立四个python文件（.py）
+本教程将会介绍如何使用Etherdata-SDK 签署交易。请建立python文件（.py）
+
+#### 参考资料（一切以最新的sdk更新文件为准）：
+#### https://sdk.docs.etdchain.net/docs/python/intro
+#### https://sdk.docs.etdchain.net/do
+cs/python/tutorial/sign
+
+## 测试ETD盒子是否正常运行
+
+```python
+#首先电脑需要连接盒子同一个网络（WIFI）
+from etherdata_sdk.json_rpc import JsonRpcMethods
+
+client = JsonRpcMethods("http://192.168.51.100:8547")
+print(client.block_number())
+```
+
 
 ## 创建账户
 
@@ -11,36 +27,13 @@ title: 创建钱包、挖矿、转账、查询余额
 from etherdata_sdk.account import Account
 
 account = Account()
-
-# 通过助记词（二选一）
-# mnemonic=""
+# 通过助记词
+# mnemonic="math bridge crew tumble sing leopard alter bargain knife siren morning daring"
 # account.create_private_key_from_mnemonic(mnemonic)
 
-# 创建随机的account（二选一）
+# 创建随机的account
 account.create_random_private_key()
-
-# 保存key
-account.save(output_file="./private3.key")
-```
-
-## 挖矿
-
-
-```python
-
-from etherdata_sdk.account import Account
-from etherdata_sdk.json_rpc.miner import Miner
-
-account = Account()
-# 读取key
-account.read_private_key_from_file("private3.key")
-
-from_account = account
-
-# 挖矿获取初始货币（连接盒子的地址）
-miner = Miner(url="http://")
-miner.set_etherbase(from_account.address)
-miner.start()
+account.save(output_file="./private.key")
 
 ```
 
@@ -53,7 +46,8 @@ from etherdata_sdk.account import Account
 
 account = Account()
 # 读取key
-account.read_private_key_from_file("private3.key")
+account.read_private_key_from_file("private.key")
+
 
 from_account = account
 to_account = Account().create_random_private_key()
@@ -72,11 +66,12 @@ from etherdata_sdk.json_rpc import JsonRpcMethods
 
 account = Account()
 # 读取key
-account.read_private_key_from_file("private3.key")
+account.read_private_key_from_file("private1.key")
 
 from_account = account
 
-client = JsonRpcMethods("https://rpc.etdchain.net")
+client = JsonRpcMethods("http://192.168.51.100:8547")
 balance = client.get_balance(address=from_account.address, tag="latest")
 print(balance)
+
 ```
