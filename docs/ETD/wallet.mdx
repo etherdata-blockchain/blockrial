@@ -1,42 +1,77 @@
 ---
 sidebar_position: 6
-title: 创建钱包与转账
+title: 创建钱包、转账、查询余额
 ---
 
-## 创建钱包
-```python
-print("hello,world")
+本教程将会介绍如何使用Etherdata-SDK 签署交易。请建立python文件（.py）
 
+#### 参考资料（一切以最新的sdk更新文件为准）：
+#### https://sdk.docs.etdchain.net/docs/python/intro
+#### https://sdk.docs.etdchain.net/do
+cs/python/tutorial/sign
+
+## 测试ETD盒子是否正常运行
+
+```python
+#首先电脑需要连接盒子同一个网络（WIFI）
+from etherdata_sdk.json_rpc import JsonRpcMethods
+
+client = JsonRpcMethods("http://192.168.51.100:8547")
+print(client.block_number())
+```
+
+
+## 创建账户
+
+```python
+from etherdata_sdk.account import Account
+
+account = Account()
+# 通过助记词
+# mnemonic="math bridge crew tumble sing leopard alter bargain knife siren morning daring"
+# account.create_private_key_from_mnemonic(mnemonic)
+
+# 创建随机的account
+account.create_random_private_key()
+account.save(output_file="./private.key")
 
 ```
 
-```python
-print("hello,world")
+ 
+## 交易
 
+```python
+from etherdata_sdk import Transaction
+from etherdata_sdk.account import Account
+
+account = Account()
+# 读取key
+account.read_private_key_from_file("private.key")
+
+
+from_account = account
+to_account = Account().create_random_private_key()
+
+transaction = Transaction(to=to_account.address, value=30000, gas=1000, gas_price=300, nonce=1, chain_id=3101)
+
+signed = from_account.sign_transaction(transaction)
 
 ```
 
-```python
-print("hello,world")
-
-
-```
+## 查询余额
 
 ```python
-print("hello,world")
+from etherdata_sdk.account import Account
+from etherdata_sdk.json_rpc import JsonRpcMethods
 
+account = Account()
+# 读取key
+account.read_private_key_from_file("private1.key")
 
-```
+from_account = account
 
-```python
-print("hello,world")
-
-
-```
-
-## 创建交易
-```python
-print("hello,world")
-
+client = JsonRpcMethods("http://192.168.51.100:8547")
+balance = client.get_balance(address=from_account.address, tag="latest")
+print(balance)
 
 ```

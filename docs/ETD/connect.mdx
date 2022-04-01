@@ -1,0 +1,17 @@
+---
+sidebar_position: 6
+title: 测试结点连接
+---
+
+如何测试盒子的结点是否连接。
+
+## 测试结点连接情况
+
+```python
+
+from etherdata_sdk.json_rpc.admin import Admin
+
+admin = Admin("http://192.168.1.100")
+#三个盒子地址默认从100到102
+admin.peers()
+```
